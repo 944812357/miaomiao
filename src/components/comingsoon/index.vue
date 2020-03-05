@@ -1,73 +1,13 @@
 <template>
     <div class="movie_body">
         <ul>
-            <li>
-                <div class="pic_show"><img src="../../../public/images/1.jpg" alt=""></div>
+            <li v-for="item in movieList" :key="item.id">
+                <div class="pic_show"><img :src="item.img | setWH('65.90')" alt=""></div>
                 <div class="info_list">
-                    <h2>无名之辈</h2>
-                    <p>17746人想看</p>
-                    <p>主演：xxx</p>
-                    <p>xxxx-xx-xx上映</p>
-                </div>
-                <div class="btn_mall">
-                    预售
-                </div>
-            </li>
-            <li>
-                <div class="pic_show"><img src="../../../public/images/1.jpg" alt=""></div>
-                <div class="info_list">
-                    <h2>无名之辈</h2>
-                    <p>17746人想看</p>
-                    <p>主演：xxx</p>
-                    <p>xxxx-xx-xx上映</p>
-                </div>
-                <div class="btn_mall">
-                    预售
-                </div>
-            </li>
-            <li>
-                <div class="pic_show"><img src="../../../public/images/1.jpg" alt=""></div>
-                <div class="info_list">
-                    <h2>无名之辈</h2>
-                    <p>17746人想看</p>
-                    <p>主演：xxx</p>
-                    <p>xxxx-xx-xx上映</p>
-                </div>
-                <div class="btn_mall">
-                    预售
-                </div>
-            </li>
-            <li>
-                <div class="pic_show"><img src="../../../public/images/1.jpg" alt=""></div>
-                <div class="info_list">
-                    <h2>无名之辈</h2>
-                    <p>17746人想看</p>
-                    <p>主演：xxx</p>
-                    <p>xxxx-xx-xx上映</p>
-                </div>
-                <div class="btn_mall">
-                    预售
-                </div>
-            </li>
-            <li>
-                <div class="pic_show"><img src="../../../public/images/1.jpg" alt=""></div>
-                <div class="info_list">
-                    <h2>无名之辈</h2>
-                    <p>17746人想看</p>
-                    <p>主演：xxx</p>
-                    <p>xxxx-xx-xx上映</p>
-                </div>
-                <div class="btn_mall">
-                    预售
-                </div>
-            </li>
-            <li>
-                <div class="pic_show"><img src="../../../public/images/1.jpg" alt=""></div>
-                <div class="info_list">
-                    <h2>无名之辈</h2>
-                    <p>17746人想看</p>
-                    <p>主演：xxx</p>
-                    <p>xxxx-xx-xx上映</p>
+                    <h2>{{item.nm}}</h2>
+                    <p>{{item.cat}}</p>
+                    <p>主演：{{item.dir}}</p>
+                    <p>{{item.pubDesc}}</p>
                 </div>
                 <div class="btn_mall">
                     预售
@@ -78,8 +18,23 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
-    name:'comingsoon'
+    name:'comingsoon',
+    data() {
+      return {
+        movieList: []
+      }
+    },
+    mounted() {
+      axios.get('/api/searchList?cityId=10&kw=b').then(res=>{
+        var msg = res.data.msg;
+        if(msg === 'ok'){
+          console.log(res.data.data.movies.list)
+          this.movieList = res.data.data.movies.list;
+        }
+      })
+    },
 }
 </script>
 
