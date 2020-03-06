@@ -1,5 +1,7 @@
 <template>
     <div class="movie_body">
+      <loading v-if="isLoading"></loading>
+      <scroller v-else>
         <ul>
             <li v-for="item in movieList" :key="item.id">
                 <div class="pic_show"><img :src="item.img | setWH('65.90')" alt=""></div>
@@ -13,7 +15,20 @@
                     预售
                 </div>
             </li>
+            <li v-for="item in movieList" :key="item.nm">
+                <div class="pic_show"><img :src="item.img | setWH('65.90')" alt=""></div>
+                <div class="info_list">
+                    <h2>{{item.nm}}</h2>
+                    <p>{{item.cat}}</p>
+                    <p>主演：{{item.dir}}</p>
+                    <p>{{item.pubDesc}}</p>
+                </div>
+                <div class="btn_mall">
+                    预售
+                </div>
+            </li>
         </ul>
+      </scroller>
     </div>
 </template>
 
@@ -23,15 +38,26 @@ export default {
     name:'comingsoon',
     data() {
       return {
-        movieList: []
+        movieList: [],
+        isLoading:true,
+        preCityId: -1
       }
     },
-    mounted() {
-      axios.get('/api/searchList?cityId=10&kw=b').then(res=>{
+    activated() {
+      // 切换城市，更新数据
+      var cityId = this.$store.state.city.id;
+      if(this.preCityId === cityId){
+        return;
+      }
+      this.loading = true;
+
+      axios.get('/api/searchList?cityId='+cityId+'&kw=b').then(res=>{
         var msg = res.data.msg;
         if(msg === 'ok'){
           console.log(res.data.data.movies.list)
           this.movieList = res.data.data.movies.list;
+          this.isLoading = false;
+          this.preCityId = cityId;
         }
       })
     },

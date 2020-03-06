@@ -1,22 +1,25 @@
 <template>
     <div id="content">
             <div class="cinema_body">
-                <ul>
-                    <li v-for="item in cinemaList" :key="item.id">
-                        <div>
-                            <span>{{item.nm}}</span>
-                            <span class="q"><span class="price">{{item.sellPrice}}</span>元起</span>
-                        </div>
-                        <div class="address">
-                            <span>{{item.addr}}</span>
-                            <span>{{item.distance}}</span>
-                        </div>
-                        <div class="card">
-                            <!-- no-use-v-if-with-v-for -->
-                            <div v-for="(num,key) in item.tag" :key="key" :class="key | classCard" v-if="num === 1">{{key | formatCard}}</div>
-                        </div>
-                    </li>
-                </ul>
+                <loading v-if="isLoading"></loading>
+                <scroller v-else>
+                    <ul>
+                        <li v-for="item in cinemaList" :key="item.id">
+                            <div>
+                                <span>{{item.nm}}</span>
+                                <span class="q"><span class="price">{{item.sellPrice}}</span>元起</span>
+                            </div>
+                            <div class="address">
+                                <span>{{item.addr}}</span>
+                                <span>{{item.distance}}</span>
+                            </div>
+                            <div class="card">
+                                <!-- no-use-v-if-with-v-for -->
+                                <div v-for="(num,key) in item.tag" :key="key" :class="key | classCard" v-if="num === 1">{{key | formatCard}}</div>
+                            </div>
+                        </li>
+                    </ul>
+                </scroller>
             </div>
         </div>
 </template>
@@ -27,14 +30,25 @@ export default {
     name:'ciList',
     data() {
         return {
-            cinemaList: []
+            cinemaList: [],
+            isLoading:true,
+            preCityId: -1
         }
     },
-    mounted() {
-        axios.get('/api/cinemaList?cityId=10').then(res=>{
+    activated() {
+      // 切换城市，更新数据
+      var cityId = this.$store.state.city.id;
+      if(this.preCityId === cityId){
+        return;
+      }
+      this.loading = true;
+
+        axios.get('/api/cinemaList?cityId='+cityId).then(res=>{
             var msg = res.data.msg;
             if(msg === 'ok'){
                 this.cinemaList = res.data.data.cinemas;
+                this.isLoading = false;
+                this.preCityId = cityId;
             }
         })
     },
