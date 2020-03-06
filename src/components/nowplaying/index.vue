@@ -1,6 +1,9 @@
 <template>
-    <div class="movie_body">
+    <div class="movie_body" ref="movie_body">
+      <loading v-if="isLoading"></loading>
+      <scroller :handleToScroll="handleToScroll" :handleToTouchEnd="handleToTouchEnd" v-else>
         <ul>
+            <li class="pullDown">{{pullDownMsg}}</li>
             <li v-for="item in movieList" :key="item.id">
                 <div class="pic_show"><img :src="item.img | setWH('65.90')" alt=""></div>
                 <div class="info_list">
@@ -13,28 +16,100 @@
                     购票
                 </div>
             </li>
+            <li v-for="item in movieList" :key="item.nm">
+                <div class="pic_show"><img :src="item.img | setWH('65.90')" alt=""></div>
+                <div class="info_list">
+                    <h2>{{item.nm}} <img v-if="item.version" src="" alt=""></h2>
+                    <p>观众评分：<span class="grade">{{item.sc}}</span></p>
+                    <p>主演：{{item.star}}</p>
+                    <p>{{item.pubDesc}}</p>
+                </div>
+                <div class="btn_mall">
+                    购票
+                </div>
+            </li>
         </ul>
+      </scroller>
     </div>
 </template>
 
 <script>
+import BScroll from 'better-scroll'
 import axios from 'axios'
 export default {
     name:'nowplaying',
     data(){
       return {
-        movieList:[]
+        movieList:[],
+        pullDownMsg:'',
+        isLoading:true,
+        preCityId: -1
       }
     },
     methods: {
-      
+      handleToScroll(pos){
+        if(pos.y > 30){
+          this.pullDownMsg = '正在更新中';
+        }
+      },
+      handleToTouchEnd(pos){
+        if(pos.y > 30){
+          if(pos.y > 30){
+            axios.get('/api/searchList?cityId=10&kw=c').then(res=>{
+              var msg = res.data.msg;
+              if(msg === 'ok'){
+                this.pullDownMsg = '更新成功';
+                setTimeout(()=>{
+                  this.movieList = res.data.data.movies.list;
+                  this.pullDownMsg = '';
+                },1000)
+              }    
+            });
+          }
+        }
+      }
     },
-    mounted() {
+    // mounted生命周期 在keep-alive下调用 ，使用activated
+    activated() {
+      // 切换城市，更新数据
+      var cityId = this.$store.state.city.id;
+      if(this.preCityId === cityId){
+        return;
+      }
+      this.loading = true;
+
       axios.get('/api/searchList?cityId=10&kw=a').then(res=>{
         var msg = res.data.msg;
         if(msg === 'ok'){
-          console.log(res.data.data.movies.list)
           this.movieList = res.data.data.movies.list;
+          this.isLoading = false;
+          this.preCityId = cityId;
+          // this.$nextTick(()=>{ // 数据渲染完毕后触发回调
+          //   var scroll = new BScroll(this.$refs.movie_body,{
+          //     tap:true, //点击触发，滑动不触发
+          //     probeType:1 //滚动时派发scroll事件，1节流，2不节流
+          //   });
+          //   scroll.on('scroll',(pos)=>{
+          //     if(pos.y > 30){
+          //       this.pullDownMsg = '正在更新中';
+          //     }
+          //   });
+          //   scroll.on('touchEnd',(pos)=>{
+          //     if(pos.y > 30){
+          //       axios.get('/api/searchList?cityId=10&kw=c').then(res=>{
+          //         var msg = res.data.msg;
+          //         if(msg === 'ok'){
+          //           this.pullDownMsg = '更新成功';
+          //           setTimeout(()=>{
+          //             this.movieList = res.data.data.movies.list;
+          //             this.pullDownMsg = '';
+          //           },1000)
+          //         }    
+          //       });
+                
+          //     }
+          //   })
+          // })
         }
       })
     },
@@ -56,6 +131,11 @@ export default {
         border-bottom: 1px solid #e6e6e6;
         padding-bottom: 10px;
       }
+    }
+    .pullDown{
+      margin: 0;
+      padding: 0;
+      border: none;
     }
     .pic_show {
       width: 65px;

@@ -5,3 +5,5 @@
 搜索 http://39.97.33.178/api/searchList?cityId=10&kw=a
 
 影院列表 http://39.97.33.178/api/cinemaList?cityId=10
+
+城市定位 http://39.97.33.178/api/getLocation

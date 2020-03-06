@@ -5,6 +5,12 @@ import store from './store'
 
 Vue.config.productionTip = false
 
+import scroller from './components/scroller'
+Vue.component('scroller',scroller)
+
+import loading from './components/loading'
+Vue.component('loading',loading)
+
 Vue.filter('setWH',(url, arg)=>{
   return url.replace(/w\.h/, arg);
 })
