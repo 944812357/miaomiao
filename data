@@ -7,3 +7,5 @@
 影院列表 http://39.97.33.178/api/cinemaList?cityId=10
 
 城市定位 http://39.97.33.178/api/getLocation
+
+电影详情 http://39.97.33.178/api/detailmovie?movieId=345808

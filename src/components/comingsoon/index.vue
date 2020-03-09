@@ -4,9 +4,9 @@
       <scroller v-else>
         <ul>
             <li v-for="item in movieList" :key="item.id">
-                <div class="pic_show"><img :src="item.img | setWH('65.90')" alt=""></div>
+                <div class="pic_show" @tap="handleToDetail(item.id)"><img :src="item.img | setWH('65.90')" alt=""></div>
                 <div class="info_list">
-                    <h2>{{item.nm}}</h2>
+                    <h2 @tap="handleToDetail(item.id)">{{item.nm}}</h2>
                     <p>{{item.cat}}</p>
                     <p>主演：{{item.dir}}</p>
                     <p>{{item.pubDesc}}</p>
@@ -43,6 +43,12 @@ export default {
         preCityId: -1
       }
     },
+    methods: {
+      handleToDetail(movieId){
+        this.$router.push('/movie/detail/'+movieId)
+      }
+    },
+    // mounted生命周期 在keep-alive下调用 ，使用activated
     activated() {
       // 切换城市，更新数据
       var cityId = this.$store.state.city.id;

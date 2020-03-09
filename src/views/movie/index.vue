@@ -14,12 +14,12 @@
                         <i class="iconfont icon-search" ></i>
                     </router-link>
                 </div>
-                <keep-alive>
+                <keep-alive >
                     <router-view></router-view>
                 </keep-alive>
             </div>
         <Tabbar></Tabbar>
-        
+        <router-view name="detail"></router-view>
     </div>
 </template>
 

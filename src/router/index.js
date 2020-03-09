@@ -36,6 +36,28 @@ const routes = [
         component:() => import('@/components/search')
       },
       {
+        path:'detail/:movieId',
+        components:{
+          default:() => import('@/components/nowplaying'),
+          // router-view name="detail"
+          detail:() => import('@/views/movie/detail')
+        },
+        props:{
+          detail:true
+        }
+      },
+      {
+        path:'detail/:movieId',
+        components:{
+          default:() => import('@/components/comingsoon'),
+          // router-view name="detail"
+          detail:() => import('@/views/movie/detail')
+        },
+        props:{
+          detail:true
+        }
+      },
+      {
         //路由重定向
         path: '/movie',
         redirect: '/movie/nowplaying'
