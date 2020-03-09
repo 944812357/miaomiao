@@ -111,10 +111,17 @@ export default {
             font-size: 13px;
             color: #666;
             span{
-                &:nth-of-type(2){
-                    float: right;
+                &:nth-of-type(1){
+                    text-overflow: ellipsis;
+                    display: inline-block;
+                    width: 240px;
                     
                 }
+                &:nth-of-type(2){
+                    float: right;
+                    display: block;
+                }
+                
             }
         }
         .card{
