@@ -10,7 +10,7 @@
                 <div class="detail_list_filter"></div>
                 <div class="detail_list_content">
                     <div class="detail_list_img">
-                        <img :src="detailMovie.img" alt="">
+                        <img :src="detailMovie.img | setWH('148.208')" alt="">
                     </div>
                     <div class="detail_list_info">
                         <h2>{{detailMovie.nm}}</h2>
@@ -29,7 +29,7 @@
                 <ul class="swiper-wrapper">
                     <li v-for="(item,index) in detailMovie.photos" :key="index"  class="swiper-slide">
                         <div>
-                            <img :src="item" alt="">
+                            <img :src="item | setWH('140.170')" alt="">
                         </div>
                     </li>
                 </ul>
@@ -40,6 +40,7 @@
 
 <script>
 import axios from 'axios'
+import Swiper from 'swiper'
 import Header from '@/components/header'
 export default {
     data(){
@@ -95,6 +96,11 @@ export default {
     }
     #content{
         .detail_player{
+            .swiper-wrapper{
+                img{
+                    height: 80px;
+                }
+            }
             margin: 20px;
             .swiper-slide{
                 width: 70px;

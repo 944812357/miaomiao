@@ -7,21 +7,9 @@
                 <div class="pic_show" @tap="handleToDetail(item.id)"><img :src="item.img | setWH('65.90')" alt=""></div>
                 <div class="info_list">
                     <h2 @tap="handleToDetail(item.id)">{{item.nm}}</h2>
-                    <p>{{item.cat}}</p>
-                    <p>主演：{{item.dir}}</p>
-                    <p>{{item.pubDesc}}</p>
-                </div>
-                <div class="btn_mall">
-                    预售
-                </div>
-            </li>
-            <li v-for="item in movieList" :key="item.nm">
-                <div class="pic_show"><img :src="item.img | setWH('65.90')" alt=""></div>
-                <div class="info_list">
-                    <h2>{{item.nm}}</h2>
-                    <p>{{item.cat}}</p>
-                    <p>主演：{{item.dir}}</p>
-                    <p>{{item.pubDesc}}</p>
+                    <p>人气热度：{{item.wish}}</p>
+                    <p>主演：{{item.star}}</p>
+                    <p>{{item.comingTitle}}</p>
                 </div>
                 <div class="btn_mall">
                     预售
@@ -57,13 +45,13 @@ export default {
       }
       this.loading = true;
 
-      axios.get('/api/searchList?cityId='+cityId+'&kw=b').then(res=>{
+      axios.get('/api/movieComingLIst?cityId='+cityId).then(res=>{
         var msg = res.data.msg;
         if(msg === 'ok'){
-          console.log(res.data.data.movies.list)
-          this.movieList = res.data.data.movies.list;
+          this.movieList = res.data.data.comingList;
           this.isLoading = false;
           this.preCityId = cityId;
+          console.log(this.movieList)
         }
       })
     },

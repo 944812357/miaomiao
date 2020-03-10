@@ -10,19 +10,7 @@
                     <h2 @tap="handleToDetail(item.id)">{{item.nm}} <img v-if="item.version" src="" alt=""></h2>
                     <p>观众评分：<span class="grade">{{item.sc}}</span></p>
                     <p>主演：{{item.star}}</p>
-                    <p>{{item.pubDesc}}</p>
-                </div>
-                <div class="btn_mall">
-                    购票
-                </div>
-            </li>
-            <li v-for="item in movieList" :key="item.nm">
-                <div class="pic_show"><img :src="item.img | setWH('65.90')" alt=""></div>
-                <div class="info_list">
-                    <h2>{{item.nm}} <img v-if="item.version" src="" alt=""></h2>
-                    <p>观众评分：<span class="grade">{{item.sc}}</span></p>
-                    <p>主演：{{item.star}}</p>
-                    <p>{{item.pubDesc}}</p>
+                    <p>{{item.comingTitle}}</p>
                 </div>
                 <div class="btn_mall">
                     购票
@@ -58,13 +46,14 @@ export default {
       handleToTouchEnd(pos){
         if(pos.y > 30){
           if(pos.y > 30){
-            axios.get('/api/searchList?cityId=10&kw=c').then(res=>{
+            axios.get('/api/movieOnInfoList?cityId='+this.cityId).then(res=>{
               var msg = res.data.msg;
               if(msg === 'ok'){
                 this.pullDownMsg = '更新成功';
                 setTimeout(()=>{
-                  this.movieList = res.data.data.movies.list;
+                  this.movieList = res.data.data.movieList;
                   this.pullDownMsg = '';
+                  console.log(this.movieList)
                 },1000)
               }    
             });
@@ -81,10 +70,10 @@ export default {
       }
       this.loading = true;
 
-      axios.get('/api/searchList?cityId=10&kw=a').then(res=>{
+      axios.get('/api/movieOnInfoList?cityId='+cityId).then(res=>{
         var msg = res.data.msg;
         if(msg === 'ok'){
-          this.movieList = res.data.data.movies.list;
+          this.movieList = res.data.data.movieList;
           this.isLoading = false;
           this.preCityId = cityId;
           // this.$nextTick(()=>{ // 数据渲染完毕后触发回调
@@ -160,6 +149,7 @@ export default {
         text-overflow: ellipsis;
       }
       p {
+        height: 22px;
         font-size: 13px;
         color: #666;
         line-height: 22px;

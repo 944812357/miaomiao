@@ -74,7 +74,9 @@ const routes = [
 
 const router = new VueRouter({
   mode: 'history',
-  base: process.env.BASE_URL,
+  // base: process.env.BASE_URL,
+  // 修改路由根目录
+  base:'miaomiao',
   routes
 })
 
